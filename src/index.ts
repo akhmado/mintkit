@@ -31,6 +31,7 @@ export class MintKit {
   }
 
   autopilot() {
+    //@ts-ignore
     const modelMap = prisma._dmmf.modelMap;
     for (const model in modelMap) {
       if (modelMap[model].name) {
