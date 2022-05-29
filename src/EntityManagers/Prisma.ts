@@ -56,7 +56,7 @@ export class EntityManager {
   async delete(id: any) {
     try {
       await prisma[this.ENTITY_KEY].delete({where: {id}});
-      return {message: `deleted successfully`}
+      return {message: 'Deleted successfully'}
     } catch (error: any) {
       return {error: error.meta.cause}
     }

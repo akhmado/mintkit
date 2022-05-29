@@ -6,15 +6,16 @@ const app = express();
 app.use(bodyParser.json())
 
 /* Mint */
-const mint = new MintKit(app);
+const mint = new MintKit({ app });
 
-mint.build({
+/* Views */
+mint.view({
   entity: 'book'
-});
+})
 
-mint.build({
+mint.view({
   entity: 'people'
-});
+})
 
 /* Start */
 app.listen(3000, () => {

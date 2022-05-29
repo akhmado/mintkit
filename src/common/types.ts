@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from 'express';
+
 export interface IMintBuild {
   entity: string;
   path?: string;
@@ -7,5 +9,6 @@ export interface IMintBuild {
     create?: boolean;
     update?: boolean;
   };
+  before?: (req: Request, res: Response, next: NextFunction) => void;
   select?: string[];
 }
