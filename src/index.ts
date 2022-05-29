@@ -1,5 +1,7 @@
 import {EntityManager, prisma} from './EntityManagers/Prisma';
 import {RouterManager} from './RouterManager/Express'
+/* Types */
+import {IMintBuild} from "./common/types";
 
 const EXISTING_PATHS: any = {};
 
@@ -11,7 +13,7 @@ export class MintKit {
     this.expressApp = expressApp;
   }
 
-  build({path, entity, methods, select}: any) {
+  build({path, entity, methods, select}: IMintBuild) {
     const mintPath = path || entity;
 
     if (EXISTING_PATHS.hasOwnProperty(mintPath)) {
@@ -35,7 +37,7 @@ export class MintKit {
     const modelMap = prisma._dmmf.modelMap;
     for (const model in modelMap) {
       if (modelMap[model].name) {
-        this.build({entity: modelMap[model].name, app: this.expressApp});
+        this.build({entity: modelMap[model].name});
       }
     }
   }

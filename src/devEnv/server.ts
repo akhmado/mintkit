@@ -9,13 +9,11 @@ app.use(bodyParser.json())
 const mint = new MintKit(app);
 
 mint.build({
-  entity: 'book',
-  select: ['id', 'name']
+  entity: 'book'
 });
 
 mint.build({
-  entity: 'people',
-  select: ['id', 'age']
+  entity: 'people'
 });
 
 /* Start */
