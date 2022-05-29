@@ -2,4 +2,5 @@
 /build
 /src/devEnv
 /prisma
+/typeorm
 .env

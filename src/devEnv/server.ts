@@ -2,20 +2,42 @@ import express from 'express';
 import bodyParser from "body-parser";
 import { MintKit } from '../index';
 
+import {DataSource} from "typeorm";
+import {Food} from "../../typeorm/Food";
+
 const app = express();
 app.use(bodyParser.json())
 
-/* Mint */
-const mint = new MintKit({ app });
+// const mint = new MintKit({ app });
+// mint.view({ entity: 'book', select: ['id', 'name'] })
 
-/* Views */
-mint.view({
-  entity: 'book'
+/* Typeorm */
+export const AppDataSource = new DataSource({
+  type: "postgres",
+  host: "localhost",
+  port: 5432,
+  username: "postgres",
+  password: "postgres",
+  database: "mintkit-typeorm",
+  synchronize: true,
+  logging: false,
+  entities: [Food],
+  subscribers: [],
+  migrations: [],
 })
 
-mint.view({
-  entity: 'people'
-})
+AppDataSource.initialize()
+  .then((dataSource) => {
+    /* Mint */
+    const mint = new MintKit({
+      ormType: 'typeorm',
+      dataSource,
+      app,
+    });
+
+    mint.view({ entity: 'food' })
+    // mint.autopilot()
+  })
 
 /* Start */
 app.listen(3000, () => {

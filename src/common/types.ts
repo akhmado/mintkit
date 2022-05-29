@@ -1,4 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
+import {Request, Response, NextFunction, Express} from 'express';
+import {DataSource} from "typeorm";
+
+export type OrmTypes = 'prisma' | 'typeorm';
+
+export interface IMintKit {
+  app: Express;
+  apiPrefix?: string;
+  ormType?: OrmTypes;
+  dataSource?: DataSource;
+}
 
 export interface IMintBuild {
   entity: string;
