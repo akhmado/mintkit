@@ -7,7 +7,16 @@ app.use(bodyParser.json())
 
 /* Mint */
 const mint = new MintKit(app);
-mint.build({ entity: 'book' });
+
+mint.build({
+  entity: 'book',
+  select: ['id', 'name']
+});
+
+mint.build({
+  entity: 'people',
+  select: ['id', 'age']
+});
 
 /* Start */
 app.listen(3000, () => {
