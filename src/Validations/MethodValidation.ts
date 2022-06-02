@@ -1,22 +1,27 @@
 export function checkEnabledMethods(id: any, method: any, methods: any) {
-  const CONSTANTS: any = {
-    'GET': 'findOne',
-    'DELETE': 'delete',
-    'POST': 'create',
-    'PATCH': 'update',
-    'PUT': 'update'
+  let checkMethod: string = null;
+
+  if (method === 'GET' && !id) {
+    checkMethod = 'findMany';
   }
 
-  let currentMethod = CONSTANTS[method];
-
-  if (method === 'GET' && id) {
-    currentMethod = 'findOne';
+  if (method === 'GET' && !!id) {
+    checkMethod = 'findOne';
   }
 
-  if (currentMethod && id && methods.hasOwnProperty(currentMethod) && methods[currentMethod]) {
-    return true;
+  if ((method === 'PATCH' || method === 'PUT') && !!id) {
+    checkMethod = 'update';
   }
 
-  return !!(currentMethod && methods.hasOwnProperty(currentMethod) && methods[currentMethod]);
+  if (method === 'DELETE') {
+    checkMethod = 'delete';
+  }
 
+  if (method === 'POST') {
+    checkMethod = 'create';
+  }
+
+  return checkMethod in methods
+    ? methods[checkMethod]
+    : false;
 }

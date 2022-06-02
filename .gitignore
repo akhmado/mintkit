@@ -3,4 +3,5 @@
 /src/devEnv
 /prisma
 /typeorm
+/uploads
 .env

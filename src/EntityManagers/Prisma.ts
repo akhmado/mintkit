@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {EntityManagerTemplate} from "./index";
 
 export const prisma = new PrismaClient();
@@ -20,10 +20,14 @@ export class PrismaEntityManager extends EntityManagerTemplate {
     });
   }
 
-  async create(data: any) {
+  async create(data: any, filePath?: string) {
     try {
       return await prisma[this.ENTITY_KEY].create({
-        data,
+        data: {
+          ...data,
+          price: 11.11,
+          image: filePath
+        },
         select: this.select
       });
     } catch (error: any) {

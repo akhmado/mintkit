@@ -1,13 +1,13 @@
-import {prisma, PrismaEntityManager} from './EntityManagers/Prisma';
+import { prisma } from './EntityManagers/Prisma';
+/* Managers */
 import {RouterManager} from './RouterManager/Express'
+import {GetManager} from "./Common/GetManager";
+import {GetMiddlewares} from "./Common/GetMiddlewares";
+import {CheckIsPathUsed} from "./Common/PathUsedCheck";
 /* Types */
-import {IMintBuild, IMintKit, OrmTypes} from "./common/types";
-import {NextFunction, Response} from "express";
+import {IMintView, IMintKitConfig, OrmTypes} from "./Common/types";
+import express, {Request, Response, NextFunction, Express} from 'express';
 import {DataSource} from "typeorm";
-import {TypeormEntityManager} from "./EntityManagers/Typeorm";
-
-/* CONSTANTS */
-const EXISTING_PATHS: any = {};
 
 /* Main */
 export class MintKit {
@@ -16,38 +16,42 @@ export class MintKit {
   private readonly ormType: OrmTypes;
   private readonly dataSource: DataSource;
 
-  constructor({ app, apiPrefix, dataSource, ormType = 'prisma' } : IMintKit) {
+  constructor(app: Express, {apiPrefix, dataSource, ormType = 'prisma', filesUpload}: IMintKitConfig) {
     this.expressApp = app;
     this.apiPrefix = apiPrefix;
     this.ormType = ormType;
     this.dataSource = dataSource;
+
+    console.log('DIRNAME', __dirname);
+
+    //Enable serving static files
+    if (!!filesUpload && filesUpload.servingURL) {
+      app.use(`/${filesUpload.servingURL}`, express.static(filesUpload.folderLocation))
+    }
   }
 
-  view({
-         path,
-         entity,
-         methods,
-         select,
-         before = (req, res, next) => next()
-       }: IMintBuild) {
+  getURL(path: string) {
+    return this.apiPrefix ? `/${this.apiPrefix}/${path}/:id?` : `/${path}/:id?`;
+  }
+
+  view({ path, entity, methods, select, before, files }: IMintView) {
+
     const mintPath = path || entity;
+    CheckIsPathUsed(mintPath)
 
-    if (EXISTING_PATHS.hasOwnProperty(mintPath)) {
-      throw Error(`Path ${mintPath} is used by another view`)
-    } else {
-      EXISTING_PATHS[mintPath] = true;
-    }
+    const manager = GetManager({
+      ormType: this.ormType,
+      dataSource: this.dataSource,
+      entity,
+      select,
+    });
 
-    let manager = null;
+    const middlewares = GetMiddlewares({
+      fileName: files?.fileName,
+      before
+    })
 
-    if (this.ormType === 'prisma') {
-      manager = new PrismaEntityManager(entity, select);
-    } else if (this.ormType === 'typeorm') {
-      manager = new TypeormEntityManager(this.dataSource, entity, select);
-    }
-
-    const url = this.apiPrefix ? `/${this.apiPrefix}/${mintPath}/:id?` : `/${mintPath}/:id?`
-    this.expressApp.use(url, before, (req: Request, res: Response, next: NextFunction) => RouterManager({
+    this.expressApp.use(this.getURL(mintPath), middlewares , (req: Request, res: Response, next: NextFunction) => RouterManager({
       req,
       res,
       next,
@@ -57,12 +61,16 @@ export class MintKit {
   }
 
   autopilot() {
-    //@ts-ignore
-    const modelMap = prisma._dmmf.modelMap;
-    for (const model in modelMap) {
-      if (modelMap[model].name) {
-        this.view({entity: modelMap[model].name});
+    if (this.ormType === 'prisma') {
+      //@ts-ignore
+      const modelMap = prisma._dmmf.modelMap;
+      for (const model in modelMap) {
+        if (modelMap[model].name) {
+          this.view({entity: modelMap[model].name});
+        }
       }
+    } else {
+      throw 'Autopilot only supports Prisma'
     }
   }
 }
