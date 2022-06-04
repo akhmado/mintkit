@@ -6,7 +6,7 @@ const fileStorage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
   destination: async (req: any, file: any, cb: any) => {
-    cb(null, path.join('uploads'));
+    cb(null, path.join(req?.folderLocation));
   },
 });
 
@@ -21,20 +21,5 @@ const fileFilter = (req: any, file: any, cb: any) => {
     cb(null, false);
   }
 };
-
-// multer({
-//   storage: multer.diskStorage({
-//     destination: (req, file, callback) => {
-//       let userId = req.user._id;
-//       let path = `./public/uploads//${userId}`;
-//       fs.mkdirsSync(path);
-//       callback(null, path);
-//     },
-//     filename: (req, file, callback) => {
-//       //originalname is the uploaded file's name with extn
-//       callback(null, file.originalname);
-//     }
-//   })
-// });
 
 export default multer({ storage: fileStorage, fileFilter: fileFilter });

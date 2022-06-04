@@ -1,4 +1,4 @@
-import { prisma } from './EntityManagers/Prisma';
+import {prisma} from './EntityManagers/Prisma';
 /* Managers */
 import {RouterManager} from './RouterManager/Express'
 import {GetManager} from "./Common/GetManager";
@@ -15,6 +15,7 @@ export class MintKit {
   private readonly apiPrefix: string;
   private readonly ormType: OrmTypes;
   private readonly dataSource: DataSource;
+  private readonly filesUpload: any;
 
   constructor(app: Express, {apiPrefix, dataSource, ormType = 'prisma', filesUpload}: IMintKitConfig) {
     this.expressApp = app;
@@ -22,10 +23,12 @@ export class MintKit {
     this.ormType = ormType;
     this.dataSource = dataSource;
 
-    console.log('DIRNAME', __dirname);
-
     //Enable serving static files
     if (!!filesUpload && filesUpload.servingURL) {
+      this.filesUpload = {
+        servingURL: filesUpload.servingURL,
+        folderLocation: filesUpload.folderLocation
+      }
       app.use(`/${filesUpload.servingURL}`, express.static(filesUpload.folderLocation))
     }
   }
@@ -34,7 +37,7 @@ export class MintKit {
     return this.apiPrefix ? `/${this.apiPrefix}/${path}/:id?` : `/${path}/:id?`;
   }
 
-  view({ path, entity, methods, select, before, files }: IMintView) {
+  view({path, entity, methods, select, before, files}: IMintView) {
 
     const mintPath = path || entity;
     CheckIsPathUsed(mintPath)
@@ -48,15 +51,18 @@ export class MintKit {
 
     const middlewares = GetMiddlewares({
       fileName: files?.fileName,
+      folderLocation: this.filesUpload?.folderLocation,
       before
     })
 
-    this.expressApp.use(this.getURL(mintPath), middlewares , (req: Request, res: Response, next: NextFunction) => RouterManager({
+    this.expressApp.use(this.getURL(mintPath), middlewares, (req: Request, res: Response, next: NextFunction) => RouterManager({
       req,
       res,
       next,
       manager,
       methods,
+      servingURL: this.filesUpload.servingURL,
+      filesConfig: files
     }))
   }
 

@@ -21,16 +21,20 @@ export interface IRouterManager {
   next: NextFunction;
   manager: any;
   methods: IViewMethods;
+  servingURL?: string;
+  filesConfig?: IMintViewFileConfig;
+}
+
+export interface IMintViewFileConfig {
+  fileName: string;
+  fileTableCell?: string;
 }
 
 export interface IMintView {
   entity: string;
   path?: string;
   methods?: IViewMethods;
-  files?: {
-    fileName: string;
-    fileTableCell: string;
-  }
+  files?: IMintViewFileConfig;
   before?: (req: Request, res: Response, next: NextFunction) => void;
   select?: string[];
 }

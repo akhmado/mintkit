@@ -7,7 +7,7 @@ interface Props {
   ormType: OrmTypes
   entity: string;
   select: string[];
-  dataSource: DataSource
+  dataSource: DataSource;
 }
 
 export const GetManager = ({ormType, entity, select, dataSource}: Props) => {

@@ -1,14 +1,12 @@
 import {checkEnabledMethods} from '../Validations/MethodValidation';
 import {IRouterManager} from "../Common/types";
 
-export async function RouterManager({req, res, next, manager, methods}: IRouterManager) {
+export async function RouterManager({ req, res, next, manager, methods, filesConfig, servingURL }: IRouterManager) {
   const method = req.method;
   const id = +req.params.id;
   const body = req.body;
   //@ts-ignore
-  const filePath = req.files?.[0].path;
-  //@ts-ignore
-  console.log('FILES', req.files);
+  const filePath = `${servingURL}/${req.files?.[0].filename}`;
 
   /* Check if method allowed */
   if (!!methods) {
@@ -30,7 +28,7 @@ export async function RouterManager({req, res, next, manager, methods}: IRouterM
   }
 
   if (method === 'POST') {
-    const data = await manager.create(body, filePath);
+    const data = await manager.create(body, filesConfig?.fileTableCell, filePath);
     res.json(data);
   }
 

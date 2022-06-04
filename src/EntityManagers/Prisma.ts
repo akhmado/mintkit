@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import {PrismaClient} from '@prisma/client';
 import {EntityManagerTemplate} from "./index";
 
 export const prisma = new PrismaClient();
@@ -20,13 +20,14 @@ export class PrismaEntityManager extends EntityManagerTemplate {
     });
   }
 
-  async create(data: any, filePath?: string) {
+  async create(data: any, fileField?: string, filePath?: string) {
+    console.log('Create fileField', fileField);
     try {
       return await prisma[this.ENTITY_KEY].create({
         data: {
           ...data,
           price: 11.11,
-          image: filePath
+          ...(fileField && filePath && {[fileField]: filePath})
         },
         select: this.select
       });
