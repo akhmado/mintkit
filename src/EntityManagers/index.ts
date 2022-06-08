@@ -1,3 +1,5 @@
+import {BodyValidation} from "../Common/BodyValidation";
+
 export class EntityManagerTemplate {
   ENTITY_KEY;
   select: Record<string, boolean>;
@@ -12,6 +14,8 @@ export class EntityManagerTemplate {
         this.select[field] = true;
       })
     }
+
+    BodyValidation(this.ENTITY_KEY);
   }
 
   async findOne(id: any): Promise<any> {}

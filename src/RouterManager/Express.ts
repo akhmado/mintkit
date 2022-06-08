@@ -6,7 +6,7 @@ export async function RouterManager({ req, res, next, manager, methods, filesCon
   const id = +req.params.id;
   const body = req.body;
   //@ts-ignore
-  const filePath = `${servingURL}/${req.files?.[0].filename}`;
+  const filePath = `${servingURL}/${req.files?.[0]?.filename}`;
 
   /* Check if method allowed */
   if (!!methods) {
@@ -28,7 +28,7 @@ export async function RouterManager({ req, res, next, manager, methods, filesCon
   }
 
   if (method === 'POST') {
-    const data = await manager.create(body, filesConfig?.fileTableCell, filePath);
+    const data = await manager.create(body, filesConfig?.fileTableCell || filesConfig?.fileName, filePath);
     res.json(data);
   }
 

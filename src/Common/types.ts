@@ -7,7 +7,7 @@ export interface IMintKitConfig {
   apiPrefix?: string;
   ormType?: OrmTypes;
   dataSource?: DataSource;
-  filesUpload?: IFilesConfig;
+  filesConfig?: IFilesConfig;
 }
 
 export interface IFilesConfig {
@@ -35,8 +35,14 @@ export interface IMintView {
   path?: string;
   methods?: IViewMethods;
   files?: IMintViewFileConfig;
+  validation?: IValidationConfig;
   before?: (req: Request, res: Response, next: NextFunction) => void;
   select?: string[];
+}
+
+export interface IValidationConfig {
+  enabled: boolean;
+  validationSchema?: any;
 }
 
 interface IViewMethods {

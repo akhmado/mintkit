@@ -26,7 +26,6 @@ export class PrismaEntityManager extends EntityManagerTemplate {
       return await prisma[this.ENTITY_KEY].create({
         data: {
           ...data,
-          price: 11.11,
           ...(fileField && filePath && {[fileField]: filePath})
         },
         select: this.select

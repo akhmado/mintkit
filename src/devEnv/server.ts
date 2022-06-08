@@ -1,26 +1,22 @@
 import express from 'express';
+import bodyParser from "body-parser";
 import {MintKit} from '../index';
 
 const app = express();
 
+app.use(bodyParser.json())
+
 const kit = new MintKit(app, {
-  apiPrefix: 'api',
-  filesUpload: {
-    servingURL: 'test',
-    folderLocation: 'uploads'
-  }
+  apiPrefix: 'api'
 });
 
 kit.view({
-  entity: 'book',
-  files: {
-    fileName: 'image',
-    fileTableCell: 'image'
-  }
+  entity: 'Book',
+  validation: { enabled: true },
 })
 
 kit.view({
-  entity: 'people',
+  entity: 'People',
 })
 
 
