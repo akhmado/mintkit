@@ -13,7 +13,7 @@ interface Props {
 
 /* Index */
 export async function MethodManager({  currentMethod, id, data, filesConfig, manager, files, viewFilesConfig }: Props) {
-  const filePath = `${filesConfig?.servingURL}/${files?.[0]?.filename}`;
+  const filePath = `${filesConfig?.servingURL}/${files?.[0]}`;
 
   /* Methods handler */
   if (currentMethod === 'GET' && id) {

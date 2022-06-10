@@ -21,13 +21,21 @@ export class PrismaEntityManager extends EntityManagerTemplate {
   }
 
   async create(data: any, fileField?: string, filePath?: string) {
+    console.log('DATA IS HERE', data);
     console.log('Create fileField', fileField);
+
+    const te = {
+      ...data,
+      isActive: false,
+      price: 525.25,
+      ...(fileField && filePath && {[fileField]: filePath})
+    }
+
+    console.log('YOYO', te);
+
     try {
       return await prisma[this.ENTITY_KEY].create({
-        data: {
-          ...data,
-          ...(fileField && filePath && {[fileField]: filePath})
-        },
+        data: te,
         select: this.select
       });
     } catch (error: any) {

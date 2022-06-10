@@ -16,7 +16,7 @@ export interface IMainManagerProps {
 
   ormType?: OrmTypes;
   select?: string[];
-  files?: File[];
+  filesPath?: string[];
   filesConfig?: IFilesConfig;
   viewFilesConfig?: IMintViewFileConfig;
   dataSource?: DataSource;
@@ -40,7 +40,8 @@ export const MainManager = async ({
   dataSource,
   filesConfig,
   validationEnabled,
-  viewFilesConfig
+  viewFilesConfig,
+  filesPath
 }: IMainManagerProps): Promise<ReturnType> => {
 
   /* Check if method allowed */
@@ -79,6 +80,7 @@ export const MainManager = async ({
 
   /* Process data */
   const processedData = await MethodManager({
+    files: filesPath,
     currentMethod,
     id,
     filesConfig,

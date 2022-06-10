@@ -15,9 +15,8 @@ const kit = new MintKit(app, {
 
 kit.view({
   entity: 'Book',
-  files: {
-    fileName: 'image',
-  },
+  validation: { enabled: false },
+  files: { fileName: 'image' },
 })
 
 kit.view({
