@@ -5,7 +5,7 @@ import {CheckIfFilesConfigPresent, CheckIsPathUsed} from "./Common/Checks";
 import {IMintView, IMintKitConfig, OrmTypes, IFilesConfig} from "./Common/types";
 import express, { Express } from 'express';
 import {DataSource} from "typeorm";
-import {ExpressHandler} from "./RequestHandler.ts/Express";
+import {ExpressHandler} from "./RequestHandler/Express/Express";
 
 /* Index */
 export class MintKit {

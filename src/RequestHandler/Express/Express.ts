@@ -1,9 +1,9 @@
 import {Express} from "express";
-import { MainManager } from "../Index/index";
-import {IFilesConfig, IMintViewFileConfig, IViewMethods, OrmTypes} from "../Common/types";
+import {IFilesConfig, IMintViewFileConfig, IViewMethods, OrmTypes} from "../../Common/types";
 import {DataSource} from "typeorm";
-import {PassFolderLocationMiddleware} from "../Middlewares/PassFolderLocationMiddleware";
-import multer from "../Common/Multer";
+import {PassFolderLocationMiddleware} from "../../Middlewares/PassFolderLocationMiddleware";
+import multer from "../../Common/Multer";
+import {MainManager} from "../../Index/index";
 
 /* Types */
 interface ExpressHandlerProps {
@@ -24,7 +24,7 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
 
   if (!!props?.viewFilesConfig?.fileName && !!props?.filesConfig?.folderLocation) {
     //@ts-ignore
-    middlewares.push((...args) => PassFolderLocationMiddleware(...args, folderLocation));
+    middlewares.push((...args) => PassFolderLocationMiddleware(...args, props.filesConfig.folderLocation));
     middlewares.push(multer.array(props.viewFilesConfig.fileName))
   }
 

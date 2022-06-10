@@ -3,21 +3,21 @@ import bodyParser from "body-parser";
 import {MintKit} from '../index';
 
 const app = express();
-app.use(bodyParser.json())
+// app.use(bodyParser.json());
 
 const kit = new MintKit(app, {
   apiPrefix: 'api',
-  // filesConfig: {
-  //   servingURL: 'uploads',
-  //   folderLocation: '/Users/akhmad/Desktop/MintKit/uploads'
-  // }
+  filesConfig: {
+    servingURL: 'uploads',
+    folderLocation: '/Users/akhmad/Desktop/MintKit/uploads'
+  }
 });
 
 kit.view({
   entity: 'Book',
-  // files: {
-  //   fileName: 'image',
-  // },
+  files: {
+    fileName: 'image',
+  },
 })
 
 kit.view({
