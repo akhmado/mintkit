@@ -18,15 +18,15 @@ export const GetMiddlewares = ({ before, fileName, folderLocation, validationCon
     middlewares.push(before);
   }
 
-  if (validationConfig?.enabled) {
-    //@ts-ignore
-    middlewares.push((...args) => validateData(...args, entity));
-  }
-
   if (!!fileName && !!folderLocation) {
     //@ts-ignore
     middlewares.push((...args) => PassFolderLocationMiddleware(...args, folderLocation));
     middlewares.push(multer.array(fileName))
+  }
+
+  if (validationConfig?.enabled) {
+    //@ts-ignore
+    middlewares.push((...args) => validateData(...args, entity));
   }
 
   return middlewares;

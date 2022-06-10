@@ -4,15 +4,21 @@ import {MintKit} from '../index';
 
 const app = express();
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 
 const kit = new MintKit(app, {
-  apiPrefix: 'api'
+  apiPrefix: 'api',
+  filesConfig: {
+    servingURL: 'uploads',
+    folderLocation: '/Users/akhmad/Desktop/MintKit/uploads'
+  }
 });
 
 kit.view({
   entity: 'Book',
-  validation: { enabled: true },
+  files: {
+    fileName: 'image',
+  },
 })
 
 kit.view({

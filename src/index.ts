@@ -37,7 +37,7 @@ export class MintKit {
     return this.apiPrefix ? `/${this.apiPrefix}/${path}/:id?` : `/${path}/:id?`;
   }
 
-  view({path, entity, methods, select, before, files, validation }: IMintView) {
+  view({path, entity, methods, select, before, files, validation = { enabled: true } }: IMintView) {
 
     const mintPath = path || entity;
     CheckIsPathUsed(mintPath)
