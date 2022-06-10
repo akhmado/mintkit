@@ -43,21 +43,14 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
   }
 }
 
-export const validateData = async (req: Request, res: Response, next: NextFunction, entity: string) => {
-  console.log('HERE', req.headers)
-  if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+export const validateData = (method: string, data: Record<string, any>, entity: string) => {
+  if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
     if (validationSchemas.hasOwnProperty(entity)) {
-      const valid = validationSchemas[entity](req.body);
+      const valid = validationSchemas[entity](data);
       if (!valid) {
-        res.status(400).json(validationSchemas[entity].errors)
-        return;
+        return validationSchemas[entity].errors;
       }
-      next();
-    } else {
-      await BodyValidation(entity);
-      validateData(req, res, next, entity);
+      return null;
     }
-  } else {
-    next();
   }
 }

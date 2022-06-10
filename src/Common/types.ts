@@ -45,7 +45,7 @@ export interface IValidationConfig {
   validationSchema?: any;
 }
 
-interface IViewMethods {
+export interface IViewMethods {
   findOne?: boolean;
   findMany?: boolean;
   delete?: boolean;
