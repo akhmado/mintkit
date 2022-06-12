@@ -4,7 +4,10 @@ import {NextFunction, Request, Response} from "express";
 
 type ValidationDataTypes = 'integer' | 'text' | 'double precision' | 'boolean';
 
-const validationSchemas: Record<string, ValidateFunction<any>> = {};
+const validationSchemas: Record<string, {
+  required: ValidateFunction<any>;
+  optional: ValidateFunction<any>;
+}> = {};
 
 const getPropertyType = (data_type: ValidationDataTypes) => {
   if (data_type === 'text') {
@@ -35,10 +38,21 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
       }
     });
 
-    validationSchemas[entity] = ajv.compile({
+    validationSchemas[entity] = {
+      required: null,
+      optional: null
+    }
+
+    validationSchemas[entity].required = ajv.compile({
         type: "object",
         properties,
         required
+    })
+
+    validationSchemas[entity].optional = ajv.compile({
+      type: "object",
+      properties,
+      required: []
     })
   }
 }
@@ -46,10 +60,12 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
 export const validateData = (method: string, data: Record<string, any>, entity: string) => {
   if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
     if (validationSchemas.hasOwnProperty(entity)) {
-      const valid = validationSchemas[entity](data);
+      const isCreate = method === 'POST' ? 'required' : 'optional';
+      const valid = validationSchemas[entity][isCreate](data);
       if (!valid) {
-        return validationSchemas[entity].errors;
+        return validationSchemas[entity][isCreate].errors;
       }
+      //Create validation entity if none
       return null;
     }
   }

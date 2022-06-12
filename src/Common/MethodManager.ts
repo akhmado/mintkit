@@ -3,7 +3,7 @@ import {IFilesConfig, IMintViewFileConfig} from "./types";
 /* Types */
 interface Props {
   currentMethod: string;
-  id: string;
+  id: number;
   filesConfig: IFilesConfig;
   viewFilesConfig?: IMintViewFileConfig;
   manager: any;
@@ -13,9 +13,7 @@ interface Props {
 
 /* Index */
 export async function MethodManager({  currentMethod, id, data, filesConfig, manager, files, viewFilesConfig }: Props) {
-  const filePath = `${filesConfig?.servingURL}/${files?.[0]}`;
-
-  console.log('filePath', filePath);
+  const filePath = !!files?.[0] ? `${filesConfig?.servingURL}/${files?.[0]}` : null;
 
   /* Methods handler */
   if (currentMethod === 'GET' && id) {

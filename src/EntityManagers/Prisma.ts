@@ -21,10 +21,6 @@ export class PrismaEntityManager extends EntityManagerTemplate {
   }
 
   async create(data: any, fileField?: string, filePath?: string) {
-    // console.log('DATA IS HERE', data);
-    // console.log('Create fileField', fileField);
-
-    console.log('Create - filePath', filePath);
 
     const te = {
       ...data,

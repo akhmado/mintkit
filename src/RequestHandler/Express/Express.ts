@@ -28,7 +28,7 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
     middlewares.push(multer.array(props.viewFilesConfig.fileName))
   }
 
-  return expressApp.use(path, middlewares, async (req, res, next) => {
+  return expressApp.use(path, middlewares, async (req, res) => {
     const data = req.body;
     const currentMethod = req.method;
     const id: string = req.params.id;

@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import {MintKit} from '../index';
 
 const app = express();
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 const kit = new MintKit(app, {
   apiPrefix: 'api',
@@ -15,7 +15,7 @@ const kit = new MintKit(app, {
 
 kit.view({
   entity: 'Book',
-  validation: { enabled: false },
+  validation: { enabled: true },
   files: { fileName: 'image' },
 })
 

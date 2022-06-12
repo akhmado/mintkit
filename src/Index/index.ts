@@ -82,7 +82,7 @@ export const MainManager = async ({
   const processedData = await MethodManager({
     files: filesPath,
     currentMethod,
-    id,
+    id: +id,
     filesConfig,
     viewFilesConfig,
     manager,
