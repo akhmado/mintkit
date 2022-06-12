@@ -6,6 +6,9 @@ const fileStorage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
   destination: async (req: any, file: any, cb: any) => {
+
+    console.log("YOYO", req.folderLocation)
+
     cb(null, path.join(req?.folderLocation));
   },
 });

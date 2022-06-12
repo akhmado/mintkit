@@ -8,7 +8,7 @@ const app = express();
 const kit = new MintKit(app, {
   apiPrefix: 'api',
   filesConfig: {
-    servingURL: 'uploads',
+    servingURL: 'static',
     folderLocation: '/Users/akhmad/Desktop/MintKit/uploads'
   }
 });

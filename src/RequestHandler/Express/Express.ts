@@ -24,7 +24,7 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
 
   if (!!props?.viewFilesConfig?.fileName && !!props?.filesConfig?.folderLocation) {
     //@ts-ignore
-    middlewares.push((...args) => PassFolderLocationMiddleware(...args, props.filesConfig.servingURL));
+    middlewares.push((...args) => PassFolderLocationMiddleware(...args, props.filesConfig.folderLocation));
     middlewares.push(multer.array(props.viewFilesConfig.fileName))
   }
 
@@ -32,9 +32,7 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
     const data = req.body;
     const currentMethod = req.method;
     const id: string = req.params.id;
-    const filesPath = req.files?.map(file => file.path);
-
-    console.log('FILES HERE', filesPath);
+    const filesPath = req?.files?.map(file => file.filename);
 
     const result = await MainManager({
       ...props,

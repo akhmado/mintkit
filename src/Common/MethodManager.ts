@@ -15,6 +15,8 @@ interface Props {
 export async function MethodManager({  currentMethod, id, data, filesConfig, manager, files, viewFilesConfig }: Props) {
   const filePath = `${filesConfig?.servingURL}/${files?.[0]}`;
 
+  console.log('filePath', filePath);
+
   /* Methods handler */
   if (currentMethod === 'GET' && id) {
     return await manager.findOne(id);
