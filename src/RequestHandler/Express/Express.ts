@@ -4,6 +4,7 @@ import {DataSource} from "typeorm";
 import {PassFolderLocationMiddleware} from "../../Middlewares/PassFolderLocationMiddleware";
 import multer from "../../Common/Multer";
 import {MainManager} from "../../Index/index";
+import {CheckSupportedContentType} from "../../Common/Checks";
 
 /* Types */
 interface ExpressHandlerProps {
@@ -33,6 +34,12 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
     const currentMethod = req.method;
     const id: string = req.params.id;
     const filesPath = req?.files?.map(file => file.filename);
+
+    const { isSupported, contentType } = CheckSupportedContentType(req.headers['content-type']);
+    if (!isSupported) {
+      res.status(400).json({ message: 'Un-supported content type please use form-data or json' });
+      return;
+    }
 
     const result = await MainManager({
       ...props,

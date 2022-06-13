@@ -3,7 +3,8 @@ import bodyParser from "body-parser";
 import {MintKit} from '../index';
 
 const app = express();
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({  extended: true }));
 
 const kit = new MintKit(app, {
   apiPrefix: 'api',
@@ -22,9 +23,6 @@ kit.view({
 kit.view({
   entity: 'People',
 })
-
-
-
 
 
 

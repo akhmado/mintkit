@@ -1,6 +1,5 @@
 import Ajv, {ValidateFunction} from "ajv"
 import {prisma} from "../EntityManagers/Prisma";
-import {NextFunction, Request, Response} from "express";
 
 type ValidationDataTypes = 'integer' | 'text' | 'double precision' | 'boolean';
 
@@ -23,9 +22,9 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
   if (!validationSchemas.hasOwnProperty(entity)) {
     const data: any[] = await prisma.$queryRaw`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=${entity}`;
 
-    const properties: Record<string, { type: string }> = {}
+    const properties: Record<string, { type: string }> = {};
     const required: string[] = [];
-    const ajv = new Ajv()
+    const ajv = new Ajv();
 
     data.forEach(column => {
       if (column.column_name !== primaryKey) {
@@ -57,16 +56,39 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
   }
 }
 
-export const validateData = (method: string, data: Record<string, any>, entity: string) => {
+export const validateData = async (method: string, data: Record<string, any>, entity: string, isFormData?: boolean) => {
   if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+    const isCreate = method === 'POST' ? 'required' : 'optional';
+    const dataToProcess = parseFormData(data);
     if (validationSchemas.hasOwnProperty(entity)) {
-      const isCreate = method === 'POST' ? 'required' : 'optional';
-      const valid = validationSchemas[entity][isCreate](data);
-      if (!valid) {
-        return validationSchemas[entity][isCreate].errors;
-      }
-      //Create validation entity if none
-      return null;
+      return validate(entity, isCreate, dataToProcess);
+    } else {
+      await BodyValidation(entity);
+      return validate(entity, isCreate, dataToProcess);
     }
   }
+}
+
+const validate = (entity: string, isCreate: string, data: Record<string, any>) => {
+  const valid = validationSchemas[entity][isCreate](data);
+  if (!valid) {
+    return validationSchemas[entity][isCreate].errors;
+  }
+  return null;
+}
+
+export const parseFormData = (data: Record<string, any>): Record<string, any> => {
+  const parsedData: Record<string, any> = {};
+
+  for (const key in data) {
+    if (data[key] === 'false' || data[key] === 'true') {
+      parsedData[key] = data[key] === 'true';
+    } else if (!isNaN(Number(data[key]))) {
+      parsedData[key] = Number(data[key])
+    } else {
+      parsedData[key] = data[key]
+    }
+  }
+
+  return parsedData;
 }

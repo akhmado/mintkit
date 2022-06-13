@@ -59,7 +59,7 @@ export const MainManager = async ({
 
   /* Validate data */
   if (validationEnabled) {
-    const validationResult = validateData(currentMethod, data, entity);
+    const validationResult = await validateData(currentMethod, data, entity);
     if (!!validationResult) {
       return {
         code: 400,
