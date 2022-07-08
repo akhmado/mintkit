@@ -1,9 +1,27 @@
 {
-  "name": "minkit",
+  "name": "mintkit",
   "version": "0.1.0",
-  "main": "app.js",
+  "main": "index.js",
+  "description": "A set of tools to speed up development process",
   "author": "@akhmado",
   "license": "MIT",
+  "keywords": [
+    "express.js",
+    "express",
+    "prisma",
+    "CRUD",
+    "typeorm",
+    "nest",
+    "validation"
+  ],
+  "homepage": "https://github.com/akhmado/mintkit.git#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akhmado/mintkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akhmado/mintkit/issues"
+  },
   "scripts": {
     "dev": "nodemon src/devEnv/server.ts"
   },

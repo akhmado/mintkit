@@ -1,10 +1,12 @@
 import Ajv, {ValidateFunction} from "ajv"
 import {prisma} from "../EntityManagers/Prisma";
-import {NextFunction, Request, Response} from "express";
 
 type ValidationDataTypes = 'integer' | 'text' | 'double precision' | 'boolean';
 
-const validationSchemas: Record<string, ValidateFunction<any>> = {};
+const validationSchemas: Record<string, {
+  required: ValidateFunction<any>;
+  optional: ValidateFunction<any>;
+}> = {};
 
 const getPropertyType = (data_type: ValidationDataTypes) => {
   if (data_type === 'text') {
@@ -20,9 +22,9 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
   if (!validationSchemas.hasOwnProperty(entity)) {
     const data: any[] = await prisma.$queryRaw`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME=${entity}`;
 
-    const properties: Record<string, { type: string }> = {}
+    const properties: Record<string, { type: string }> = {};
     const required: string[] = [];
-    const ajv = new Ajv()
+    const ajv = new Ajv();
 
     data.forEach(column => {
       if (column.column_name !== primaryKey) {
@@ -35,29 +37,58 @@ export const BodyValidation = async (entity: string, primaryKey = 'id') => {
       }
     });
 
-    validationSchemas[entity] = ajv.compile({
+    validationSchemas[entity] = {
+      required: null,
+      optional: null
+    }
+
+    validationSchemas[entity].required = ajv.compile({
         type: "object",
         properties,
         required
     })
+
+    validationSchemas[entity].optional = ajv.compile({
+      type: "object",
+      properties,
+      required: []
+    })
   }
 }
 
-export const validateData = async (req: Request, res: Response, next: NextFunction, entity: string) => {
-  console.log('HERE', req.headers)
-  if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+export const validateData = async (method: string, data: Record<string, any>, entity: string, isFormData?: boolean) => {
+  if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+    const isCreate = method === 'POST' ? 'required' : 'optional';
+    const dataToProcess = parseFormData(data);
     if (validationSchemas.hasOwnProperty(entity)) {
-      const valid = validationSchemas[entity](req.body);
-      if (!valid) {
-        res.status(400).json(validationSchemas[entity].errors)
-        return;
-      }
-      next();
+      return validate(entity, isCreate, dataToProcess);
     } else {
       await BodyValidation(entity);
-      validateData(req, res, next, entity);
+      return validate(entity, isCreate, dataToProcess);
     }
-  } else {
-    next();
   }
+}
+
+const validate = (entity: string, isCreate: string, data: Record<string, any>) => {
+  const valid = validationSchemas[entity][isCreate](data);
+  if (!valid) {
+    return validationSchemas[entity][isCreate].errors;
+  }
+  return null;
+}
+
+export const parseFormData = (data: Record<string, any>): Record<string, any> => {
+  const parsedData: Record<string, any> = {};
+
+  for (const key in data) {
+    if (data[key] === 'false' || data[key] === 'true') {
+      parsedData[key] = data[key] === 'true';
+    } else if (!isNaN(Number(data[key]))) {
+      parsedData[key] = Number(data[key])
+    } else {
+      parsedData[key] = data[key]
+    }
+  }
+
+  return parsedData;
 }

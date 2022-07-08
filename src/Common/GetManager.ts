@@ -16,4 +16,5 @@ export const GetManager = ({ormType, entity, select, dataSource}: Props) => {
   } else if (ormType === 'typeorm') {
     return new TypeormEntityManager(dataSource, entity, select);
   }
+  throw `${ormType} is not supported`;
 }

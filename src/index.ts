@@ -1,15 +1,13 @@
 import {prisma} from './EntityManagers/Prisma';
-/* Managers */
-import {RouterManager} from './RouterManager/Express'
-import {GetManager} from "./Common/GetManager";
-import {GetMiddlewares} from "./Common/GetMiddlewares";
+/* Checks */
 import {CheckIfFilesConfigPresent, CheckIsPathUsed} from "./Common/Checks";
 /* Types */
 import {IMintView, IMintKitConfig, OrmTypes, IFilesConfig} from "./Common/types";
-import express, {Request, Response, NextFunction, Express} from 'express';
+import express, { Express } from 'express';
 import {DataSource} from "typeorm";
+import {ExpressHandler} from "./RequestHandler/Express/Express";
 
-/* Main */
+/* Index */
 export class MintKit {
   private readonly expressApp: Express;
   private readonly apiPrefix: string;
@@ -37,38 +35,26 @@ export class MintKit {
     return this.apiPrefix ? `/${this.apiPrefix}/${path}/:id?` : `/${path}/:id?`;
   }
 
-  view({path, entity, methods, select, before, files, validation = { enabled: true } }: IMintView) {
+  view({path, entity, methods, select, before, files, validation = { enabled: false } }: IMintView) {
 
     const mintPath = path || entity;
     CheckIsPathUsed(mintPath)
     CheckIfFilesConfigPresent(this.filesConfig, files)
 
-    const manager = GetManager({
+    const props = {
+      entity,
+      methods,
+      validationEnabled: validation.enabled,
       ormType: this.ormType,
-      dataSource: this.dataSource,
-      entity,
       select,
-    });
+      filesConfig: this.filesConfig,
+      viewFilesConfig: files,
+      dataSource: this.dataSource,
+    }
 
-    const middlewares = GetMiddlewares({
-      fileName: files?.fileName,
-      folderLocation: this.filesConfig?.folderLocation,
-      validationConfig: validation,
-      entity,
-      before
-    })
-
-    this.expressApp.use(this.getURL(mintPath), middlewares, (req: Request, res: Response, next: NextFunction) => {
-      return RouterManager({
-        req,
-        res,
-        next,
-        manager,
-        methods,
-        servingURL: this.filesConfig?.servingURL,
-        filesConfig: files
-      })
-    })
+    if (!!this.expressApp) {
+      ExpressHandler(this.expressApp, this.getURL(mintPath), props);
+    }
   }
 
   autopilot() {
