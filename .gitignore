@@ -1,6 +1,5 @@
 /node_modules
 /build
-/src/devEnv
 /prisma
 /typeorm
 /uploads

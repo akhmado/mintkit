@@ -12,9 +12,6 @@ kit.view({
   validation: { enabled: true }
 })
 
-kit.view({
-  entity: 'People',
-})
 
 
 
