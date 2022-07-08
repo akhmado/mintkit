@@ -1,6 +1,6 @@
 {
   "name": "mintkit",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "build/index.js",
   "description": "A set of tools to speed up development process",
   "author": "@akhmado",
@@ -12,6 +12,7 @@
     "typeorm",
     "validation"
   ],
+  "types": "build/index.d.ts",
   "homepage": "https://github.com/akhmado/mintkit.git#readme",
   "repository": {
     "type": "git",
