@@ -5,3 +5,4 @@
 /typeorm
 /uploads
 .env
+*.tgz

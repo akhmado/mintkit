@@ -1,6 +1,6 @@
 {
   "name": "mintkit",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "main": "index.js",
   "description": "A set of tools to speed up development process",
   "author": "@akhmado",
@@ -23,6 +23,7 @@
     "url": "https://github.com/akhmado/mintkit/issues"
   },
   "scripts": {
+    "publish": "tsc && npm pack && npm publish",
     "dev": "nodemon src/devEnv/server.ts"
   },
   "devDependencies": {
