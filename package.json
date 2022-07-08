@@ -1,17 +1,15 @@
 {
   "name": "mintkit",
-  "version": "0.1.4",
-  "main": "index.js",
+  "version": "0.1.5",
+  "main": "build/index.js",
   "description": "A set of tools to speed up development process",
   "author": "@akhmado",
   "license": "MIT",
   "keywords": [
-    "express.js",
     "express",
     "prisma",
     "CRUD",
     "typeorm",
-    "nest",
     "validation"
   ],
   "homepage": "https://github.com/akhmado/mintkit.git#readme",
