@@ -35,7 +35,7 @@ export const ExpressHandler = (expressApp: Express, path: string, props: Express
     const id: string = req.params.id;
     const filesPath = req?.files?.map(file => file.filename);
 
-    const { isSupported, contentType } = CheckSupportedContentType(req.headers['content-type']);
+    const { isSupported, contentType } = CheckSupportedContentType(req.headers?.['content-type'], req.method);
     if (!isSupported) {
       res.status(400).json({ message: 'Un-supported content type please use form-data or json' });
       return;

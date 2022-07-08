@@ -3,21 +3,13 @@ import bodyParser from "body-parser";
 import {MintKit} from '../index';
 
 const app = express();
-// app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({  extended: true }));
+app.use(bodyParser.json());
 
-const kit = new MintKit(app, {
-  apiPrefix: 'api',
-  filesConfig: {
-    servingURL: 'static',
-    folderLocation: '/Users/akhmad/Desktop/MintKit/uploads'
-  }
-});
+const kit = new MintKit(app, { apiPrefix: 'api' });
 
 kit.view({
   entity: 'Book',
-  validation: { enabled: true },
-  files: { fileName: 'image' },
+  validation: { enabled: true }
 })
 
 kit.view({
@@ -43,7 +35,6 @@ kit.view({
 
 /* Typeorm */
 import {DataSource} from "typeorm";
-import {Food} from "../../typeorm/Food";
 /* Typeorm */
 // export const AppDataSource = new DataSource({
 //   type: "postgres",

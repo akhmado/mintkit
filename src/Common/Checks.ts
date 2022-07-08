@@ -16,16 +16,23 @@ export const CheckIfFilesConfigPresent = (config?: IFilesConfig, files?: IMintVi
   }
 }
 
-export const CheckSupportedContentType = (contentType: string): { isSupported: boolean; contentType: string } => {
-  const isSupported = !!(
-    contentType.includes('multipart/form-data') ||
-    contentType.includes('application/json') ||
-    contentType.includes('application/x-www-form-urlencoded')
-  )
+export const CheckSupportedContentType = (contentType: string = '', method = 'GET'): { isSupported: boolean; contentType: string } => {
+  if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+    const isSupported = !!(
+      contentType.includes('multipart/form-data') ||
+      contentType.includes('application/json') ||
+      contentType.includes('application/x-www-form-urlencoded')
+    )
+    return {
+      isSupported,
+      contentType
+    };
+  }
+
   return {
-    isSupported,
+    isSupported: true,
     contentType
-  };
+  }
 }
 
 
