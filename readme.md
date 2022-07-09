@@ -1,7 +1,7 @@
 # Mintkit
 
 Mintkit is a set of tools to increase your developing and prototyping speed, In case you have an idea and you want to test it, Mintkit gets you covered.
-Mintkit generates a CRUD endpoint for each of your Prisma tables and adds **body validation** (optional) from types extracted from the model itself, in case you need **file upload** Mintkit can handle that too out of the box, You need to manage the data through UI Mintkit comes with an **admin panel** through which you can manage all your tables visually, Mintkit is thought of as an additional tool which can be embedded into your existing or newly created express project an not fully-fledged framework (at least for now)
+Mintkit generates a CRUD endpoint for each of your Prisma tables and adds **body validation** (optional) from types extracted from the model itself, in case you need **file upload** Mintkit can handle that too out of the box, You need to manage the data through UI Mintkit comes with an **admin panel** (soon to be available) through which you can manage all your tables visually, Mintkit is thought of as an additional tool which can be embedded into your existing or newly created express project an not fully-fledged framework (at least for now)
 
 Mintkit still in a very early stages of development so expect it to crash from time to time :)
 

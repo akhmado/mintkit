@@ -1,6 +1,6 @@
 {
   "name": "mintkit",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "main": "build/index.js",
   "description": "A set of tools to speed up development process",
   "author": "@akhmado",
